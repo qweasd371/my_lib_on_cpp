@@ -1,0 +1,4 @@
+#ifndef MY_LIB_BIGINT_HPP
+#define MY_LIB_BIGINT_HPP
+
+#endif //MY_LIB_BIGINT_HPP
