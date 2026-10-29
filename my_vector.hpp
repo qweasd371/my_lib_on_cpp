@@ -3,7 +3,6 @@
 #include <initializer_list>
 #include <iostream>
 #include <format>
-#include <utility>
 #include "my_exeptions.hpp"
 
 namespace my_lib {
@@ -19,6 +18,7 @@ namespace my_lib {
 		size_t get_size() {
 			return size;
 		}
+		my_vector() = default;
 		my_vector(std::initializer_list<T> list)  {
 			for (T element : list) {
 				push_back(element);
@@ -39,7 +39,7 @@ namespace my_lib {
 			data = new_data;
 		}
 		T pop_back() {
-			T tample = data[size-1];
+			T temple = data[size-1];
 			void* new_data_maybe_null = realloc(data, sizeof(T)*(--size));
 
 			if (new_data_maybe_null == nullptr) {
@@ -47,7 +47,15 @@ namespace my_lib {
 			}
 			T* new_data = static_cast<T*>(new_data_maybe_null);
 			data = new_data;
-			return tample;
+			return temple;
+		}
+		T pop_by_index(size_t index) {
+			T temp = data[index];
+			for (size_t i = index+1; i < size; i++) {
+				data[i-1] = data[i];
+			}
+			pop_back();
+			return temp;
 		}
 
 		T* begin() {
@@ -61,9 +69,9 @@ namespace my_lib {
 				*i = func(*i);
 			}
 		}
-		void print() {
+		void print(const std::string& sep = {" "}) {
 			for (T* i = begin(); i != end(); ++i){
-				std::cout << *i << " ";
+				std::cout << *i << sep;
 			}
 			std::cout << "\n";
 		}
@@ -79,7 +87,17 @@ namespace my_lib {
 			}
 			return data[index];
 		}
-
+		void swap(size_t index_1, size_t index_2) {
+			T temp = data[index_1];
+			data[index_1] = data[index_2];
+			data[index_2] = temp;
+		}
+		void revers() {
+			size_t index = size;
+			do {
+				push_back(pop_by_index(--index));
+			} while (index);
+		}
 	};
 }
 #endif
