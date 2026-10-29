@@ -40,7 +40,12 @@ namespace my_lib {
 		}
 		T pop_back() {
 			T temple = data[size-1];
-			void* new_data_maybe_null = realloc(data, sizeof(T)*(--size));
+			if (!--size) {
+				free(data);
+				data = nullptr;
+				return temple;
+			}
+			void* new_data_maybe_null = realloc(data, sizeof(T)*size);
 
 			if (new_data_maybe_null == nullptr) {
 				throw my_expt::memory_error("realloc return NULL");
@@ -93,10 +98,18 @@ namespace my_lib {
 			data[index_2] = temp;
 		}
 		void revers() {
-			size_t index = size;
-			do {
-				push_back(pop_by_index(--index));
-			} while (index);
+			for (size_t index = 0; index <  size/2; index++) {
+				swap(index, size-index-1);
+			}
+		}
+		bool is_empty() {
+			return !size;
+		}
+		T get_last() {
+			if (is_empty()) {
+				throw my_expt::empty_vector_error("");
+			}
+			return data[size-1];
 		}
 	};
 }
